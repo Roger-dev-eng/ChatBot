@@ -2,6 +2,13 @@
 
 Este projeto é um chatbot inteligente construído utilizando **Flask**. O modelo de linguagem utilizado é o **LLaMA 3.1 8B Instant**, fornecido gratuitamente pela Groq.
 
+## Conteúdo
+- [Objetivo](#objetivo-do-projeto)
+- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Como rodar o sistema](#como-o-rodar-o-sistema)
+- [Tecnologias utilizadas](#tecnologias-utilizadas)
+- [Conclusão](#conclusão)
+
 ## Objetivo do Projeto:
 O objetivo deste chatbot é oferecer uma interface simples, rápida e intuitiva para interagir com um modelo de IA generativa.  
 Ele permite que o usuário envie mensagens e receba respostas diretamente da API de inferência da Groq.
