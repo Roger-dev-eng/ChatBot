@@ -31,9 +31,9 @@ ChatBot/
 │ └── groq_client.py
 │
 └── frontend/
-├── index.html
-├── style.css
-└── script.js
+  ├── index.html
+  ├── style.css
+  └── script.js
 ```
 ### 🔹 **app.py**
 Servidor Flask que:

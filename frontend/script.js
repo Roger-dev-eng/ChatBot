@@ -7,8 +7,21 @@ function addMessage(text, sender) {
     div.classList.add("msg", sender);
     div.textContent = text;
     messagesDiv.appendChild(div);
-
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+function setLoading(isLoading) {
+    sendBtn.disabled = isLoading;
+    input.disabled = isLoading;
+    if (isLoading) {
+        sendBtn.textContent = "Enviando...";
+    } else {
+        sendBtn.textContent = "Enviar";
+    }
+}
+
+function addSystemMessage(text) {
+    addMessage(text, "system");
 }
 
 async function sendMessage() {
@@ -17,16 +30,38 @@ async function sendMessage() {
 
     addMessage(msg, "user");
     input.value = "";
+    setLoading(true);
 
-    const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ message: msg })
-    });
+    let response;
+    try {
+        response = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: msg })
+        });
+    } catch (error) {
+        setLoading(false);
+        addSystemMessage("Erro de rede. Tente novamente.");
+        return;
+    }
 
-    const data = await response.json();
+    let data;
+    try {
+        data = await response.json();
+    } catch (error) {
+        setLoading(false);
+        addSystemMessage("Resposta invalida do servidor.");
+        return;
+    }
+
+    if (!response.ok) {
+        setLoading(false);
+        addSystemMessage(data.error || "Falha ao gerar resposta.");
+        return;
+    }
 
     addMessage(data.response, "bot");
+    setLoading(false);
 }
 
 sendBtn.addEventListener("click", sendMessage);
