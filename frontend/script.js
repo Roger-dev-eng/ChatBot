@@ -17,6 +17,11 @@ function getToken() {
     return sessionStorage.getItem(TOKEN_KEY);
 }
 
+function authenticatedHeaders(headers = {}) {
+    const token = getToken();
+    return token ? { ...headers, Authorization: `Bearer ${token}` } : headers;
+}
+
 function setAuthenticated(isAuthenticated) {
     authView.classList.toggle("hidden", isAuthenticated);
     document.querySelector(".chat-container").classList.toggle("hidden", !isAuthenticated);
@@ -133,6 +138,7 @@ async function uploadDocument() {
     try {
         const response = await fetch("/api/upload", {
             method: "POST",
+            headers: authenticatedHeaders(),
             body: formData
         });
 
@@ -162,7 +168,7 @@ async function sendMessage() {
     try {
         response = await fetch("/api/chat", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: authenticatedHeaders({ "Content-Type": "application/json" }),
             body: JSON.stringify({ message: msg })
         });
     } catch (error) {
