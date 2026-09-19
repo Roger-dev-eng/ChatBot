@@ -9,10 +9,11 @@ class Chatbot:
     def set_knowledge_base(self, knowledge_base):
         self.knowledge_base = knowledge_base
 
-    def chat(self, message):
+    def chat(self, message, knowledge_base=None):
         context = ""
-        if self.knowledge_base is not None:
-            context = self.knowledge_base.get_context(message)
+        selected_knowledge_base = knowledge_base or self.knowledge_base
+        if selected_knowledge_base is not None:
+            context = selected_knowledge_base.get_context(message)
 
         system_prompt = self.system_prompt
         if context:

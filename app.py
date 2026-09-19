@@ -5,6 +5,7 @@ from chatbot_core.rag import DocumentKnowledgeBase
 import logging
 import os
 import time
+import uuid
 from werkzeug.utils import secure_filename
 from PyPDF2 import PdfReader
 from docx import Document
@@ -26,8 +27,7 @@ MAX_MESSAGE_LENGTH = int(os.getenv("MAX_MESSAGE_LENGTH", "1000"))
 JWT_SECRET = os.getenv("JWT_SECRET")
 
 bot = Chatbot()
-knowledge_base = DocumentKnowledgeBase()
-bot.set_knowledge_base(knowledge_base)
+knowledge_bases = {}
 
 
 def require_authentication(route_handler):
@@ -50,6 +50,10 @@ def require_authentication(route_handler):
         return route_handler(*args, **kwargs)
 
     return authenticated_handler
+
+
+def get_user_knowledge_base():
+    return knowledge_bases.setdefault(request.user_email, DocumentKnowledgeBase())
 
 
 @app.route("/")
@@ -76,7 +80,8 @@ def api_upload():
     if not data.strip():
         return jsonify({"error": "O arquivo está vazio."}), 400
 
-    save_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+    stored_filename = f"{uuid.uuid4().hex}_{filename}"
+    save_path = os.path.join(app.config["UPLOAD_FOLDER"], stored_filename)
     with open(save_path, "wb") as handle:
         handle.write(data)
 
@@ -94,8 +99,7 @@ def api_upload():
     if not content.strip():
         return jsonify({"error": "Não foi possível extrair texto do arquivo."}), 400
 
-    knowledge_base.add_document(filename, content)
-    bot.set_knowledge_base(knowledge_base)
+    get_user_knowledge_base().add_document(filename, content)
 
     return jsonify({"message": "Documento carregado com sucesso.", "filename": filename})
 
@@ -116,7 +120,7 @@ def api_chat():
         ), 400
 
     try:
-        response = bot.chat(message)
+        response = bot.chat(message, knowledge_base=get_user_knowledge_base())
     except Exception:
         logging.exception("Erro ao chamar o LLM")
         duration_ms = int((time.perf_counter() - start) * 1000)
