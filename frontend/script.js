@@ -1,4 +1,4 @@
-const AUTH_API_URL = "http://localhost:8080/api/auth";
+const AUTH_API_URL = `http://${window.location.hostname}:8080/api/auth`;
 const TOKEN_KEY = "chatbot_access_token";
 const authView = document.getElementById("authView");
 const loginForm = document.getElementById("loginForm");
