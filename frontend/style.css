@@ -24,6 +24,90 @@ body {
     justify-content: center;
 }
 
+.hidden {
+    display: none !important;
+}
+
+.auth-view {
+    min-height: 100vh;
+    width: min(440px, 92vw);
+    display: grid;
+    place-items: center;
+}
+
+.auth-card {
+    width: 100%;
+    padding: 34px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.12);
+}
+
+.eyebrow {
+    color: var(--accent-strong);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.auth-card h1 {
+    margin: 8px 0;
+}
+
+.auth-subtitle {
+    color: var(--muted);
+    margin: 0 0 24px;
+}
+
+.auth-form {
+    display: grid;
+    gap: 8px;
+}
+
+.auth-form label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+.auth-form input {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font: inherit;
+    padding: 12px;
+}
+
+.auth-form button {
+    background: var(--accent);
+    color: white;
+    margin-top: 16px;
+}
+
+.link-btn {
+    background: transparent;
+    color: var(--accent-strong);
+    display: block;
+    font-size: 14px;
+    margin: 14px auto 0;
+    padding: 4px;
+}
+
+.auth-message {
+    min-height: 20px;
+    font-size: 14px;
+    margin: 18px 0 0;
+}
+
+.auth-message.error {
+    color: #a52626;
+}
+
+.auth-message.success {
+    color: var(--accent-strong);
+}
+
 .chat-container {
     width: min(900px, 92vw);
     margin: 32px 0;
@@ -47,6 +131,11 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.header-actions {
+    display: flex;
+    gap: 8px;
 }
 
 .header-btn {

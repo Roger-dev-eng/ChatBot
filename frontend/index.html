@@ -10,11 +10,46 @@
 </head>
 
 <body>
+    <main id="authView" class="auth-view">
+        <section class="auth-card" aria-labelledby="authTitle">
+            <p class="eyebrow">Acesso seguro</p>
+            <h1 id="authTitle">Entrar no Chatbot</h1>
+            <p class="auth-subtitle">Use sua conta para acessar suas conversas.</p>
+
+            <form id="loginForm" class="auth-form">
+                <label for="loginEmail">E-mail</label>
+                <input id="loginEmail" type="email" autocomplete="email" required>
+
+                <label for="loginPassword">Senha</label>
+                <input id="loginPassword" type="password" autocomplete="current-password" required>
+
+                <button type="submit">Entrar</button>
+            </form>
+
+            <button id="showRegisterBtn" class="link-btn" type="button">Criar uma conta</button>
+
+            <form id="registerForm" class="auth-form hidden">
+                <label for="registerEmail">E-mail</label>
+                <input id="registerEmail" type="email" autocomplete="email" required>
+
+                <label for="registerPassword">Senha</label>
+                <input id="registerPassword" type="password" autocomplete="new-password" minlength="8" required>
+
+                <button type="submit">Cadastrar</button>
+            </form>
+
+            <p id="authMessage" class="auth-message" role="alert"></p>
+        </section>
+    </main>
+
     <div class="chat-container">
 
         <div class="header">
             <span>Chatbot</span>
-            <button id="clearBtn" class="secondary-btn header-btn" type="button">Novo chat</button>
+            <div class="header-actions">
+                <button id="clearBtn" class="secondary-btn header-btn" type="button">Novo chat</button>
+                <button id="logoutBtn" class="secondary-btn header-btn" type="button">Sair</button>
+            </div>
         </div>
 
         <div id="messages" class="messages"></div>
