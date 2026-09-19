@@ -12,6 +12,8 @@ from docx import Document
 from dotenv import load_dotenv
 from functools import wraps
 import jwt
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 load_dotenv()
 
@@ -19,7 +21,18 @@ app = Flask(__name__, static_folder="frontend", static_url_path="")
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
 app.config["UPLOAD_FOLDER"] = os.path.join(os.path.dirname(__file__), "uploads")
 os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
-CORS(app)
+
+allowed_origins = [
+    origin.strip()
+    for origin in os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:5000").split(",")
+    if origin.strip()
+]
+CORS(app, origins=allowed_origins)
+limiter = Limiter(
+    key_func=get_remote_address,
+    app=app,
+    storage_uri=os.getenv("RATELIMIT_STORAGE_URI", "memory://"),
+)
 
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
 
@@ -63,6 +76,7 @@ def index():
 
 @app.route("/api/upload", methods=["POST"])
 @require_authentication
+@limiter.limit("10 per hour")
 def api_upload():
     file_storage = request.files.get("file")
     if not file_storage or file_storage.filename == "":
@@ -106,6 +120,7 @@ def api_upload():
 
 @app.route("/api/chat", methods=["POST"])
 @require_authentication
+@limiter.limit("30 per minute")
 def api_chat():
     start = time.perf_counter()
     data = request.get_json(silent=True) or {}

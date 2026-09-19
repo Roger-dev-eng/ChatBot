@@ -5,3 +5,4 @@ groq
 PyPDF2
 python-docx
 PyJWT
+Flask-Limiter
