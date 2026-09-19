@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+MODEL_NAME = os.getenv("GROQ_MODEL", "qwen/qwen3.8-27b")
 
 
 class GroqClientError(Exception):
@@ -24,7 +25,7 @@ def gerar_resposta(
     for attempt in range(retries + 1):
         try:
             resposta = client.chat.completions.create(
-                model="llama-3.1-8b-instant",
+                model=MODEL_NAME,
                 messages=[{"role": "system", "content": system_prompt}] + mensagens,
                 temperature=temperature,
                 max_tokens=max_tokens,
